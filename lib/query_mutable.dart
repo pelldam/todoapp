@@ -82,10 +82,10 @@ query GetAllTasks($developer_id: String!) {
 }
 
 
-String getSingleTask(String id){
+String getSingleTask(){
 
 
-  return '''
+  return r'''
 query GetSingleTask($id: uuid!) {
   tasks_by_pk(id: $id) {
     created_at

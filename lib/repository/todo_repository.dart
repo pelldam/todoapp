@@ -16,10 +16,22 @@ String developer_id="peldam13223";
 
 QueryMutation queryMutation = QueryMutation();
 TodoListState status=TodoListState.Empty;
-
+bool ismock=false;
 // GraphQLClient _client = await clientToQuery();
 TodoAddingStatus addingStatus=TodoAddingStatus.Empty;
+ var items =[
+      Todo(id: "r1", title: "Working Today", description: "Doing today work", 
+          developerId: "pelldam2341",isCompleted: false),
+       Todo(id: "r2", title: "Sleeping ", description: "Sleeping Today", 
+          developerId: "pelldam2341",isCompleted: true),
+    ];
 Future getTask()async{
+
+  if(ismock){
+
+_allTodo=items;
+return;
+  }
   GraphQLClient _client = await clientToQuery();
   status=TodoListState.Loading;
   // notifyListeners();
@@ -64,7 +76,15 @@ print("mutation query result ${result.data}");
 
 }
 
-Future addTask(String? title,String? description,{BuildContext? context})async{
+Future addTask(String? title,String? description,{BuildContext? context,String? id})async{
+ if(ismock){
+
+   _allTodo.addAll(items);
+_allTodo.add(  Todo(id: id, title: title, description: description, 
+          developerId: "pelldam2341",isCompleted: false));
+return;
+ }
+ 
   GraphQLClient _client = await clientToQuery();
 addingStatus=TodoAddingStatus.Loading;
 notifyListeners();
@@ -96,6 +116,18 @@ addingStatus=TodoAddingStatus.Error;
 }
 }
 Future editTask(String? title,String? description,String? id,{BuildContext? context})async{
+  if(ismock){
+
+      Todo? item=_allTodo.singleWhere((element) => element.id!.contains(id!));
+    if(item!=null){
+    _allTodo.remove(item);
+    item.title=title;
+    item.description=description;
+    _allTodo.add(item);
+    }
+    return;
+  }
+  
   GraphQLClient _client = await clientToQuery();
 addingStatus=TodoAddingStatus.Loading;
 notifyListeners();
@@ -128,6 +160,15 @@ addingStatus=TodoAddingStatus.Error;
 
 
 Future editTaskStatus(String id,bool val)async{
+
+  if(ismock){
+ var item=_allTodo.singleWhere((element) => element.id==id);
+    _allTodo.remove(item);
+    item.isCompleted=val;
+    _allTodo.add(item);
+    return;
+
+  }
   GraphQLClient _client = await clientToQuery();
 addingStatus=TodoAddingStatus.Loading;
 notifyListeners();
@@ -158,7 +199,11 @@ addingStatus=TodoAddingStatus.Error;
 
 
 Future deleteTask(String id,{BuildContext? context})async{
-
+if(ismock){
+ var item=_allTodo.singleWhere((element) => element.id==id);
+    _allTodo.remove(item);
+  return;
+}
  GraphQLClient _client = await clientToQuery();
 addingStatus=TodoAddingStatus.Loading;
 notifyListeners();

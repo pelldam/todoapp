@@ -27,7 +27,7 @@ class CustomTextField extends StatelessWidget {
       this.height=50});
   final VoidCallback? onClick;
   final Color? colors;
-  // ignore: non_constant_identifier_names
+  // ignore: non_conant_identifier_names
   final bool? AllowClickable;
   final String? hint;
   final String? label;
